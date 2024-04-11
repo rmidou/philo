@@ -52,7 +52,7 @@ int	main(int ac, char **av)
 	{
 		printf("philosophers: wrong arguments: <number_of_philosophers>"
 			" <time_to_die> <time_to_eat> <time_to_sleep>"
-			"[number_of_times_each_philosopher_must_eat]"\n);
+			"[number_of_times_each_philosopher_must_eat]\n");
 	}
 	ft_bzero(&main, sizeof(t_main));
 	if (ac < 4)
