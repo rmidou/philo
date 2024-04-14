@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:03:37 by rmidou            #+#    #+#             */
-/*   Updated: 2024/04/10 15:35:21 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/04/14 13:51:49 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_philo
 	int				tts;
 	uint64_t		leat;
 	int				eat;
+	int				eatt;
 	pthread_mutex_t	*fork1;
 	pthread_mutex_t	*fork2;
 	pthread_t		thread;
