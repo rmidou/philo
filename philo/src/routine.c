@@ -44,8 +44,8 @@ void	eat(t_philo *philo)
 	if (take_forks(philo))
 		return ;
 	philo->eatt = 1;
-	philo->leat = get_time2(philo->main) + philo->tte;
-	printf("%lu %d %s\n", philo->leat - philo->tte, philo->id, "is eating");
+	philo->leat = get_time2(philo->main);
+	printf("%lu %d %s\n", philo->leat, philo->id, "is eating");
 	philo->eat++;
 	ft_usleep(philo->main->tte);
 	philo->eatt = 0;
