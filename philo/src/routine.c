@@ -6,18 +6,29 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 09:15:02 by rmidou            #+#    #+#             */
-/*   Updated: 2024/04/10 15:53:24 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/04/14 14:23:33 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	take_forks(t_philo *philo)
+int	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->fork1);
-	printf("%lu %d %s\n", get_time2(philo->main), philo->id, "has taken a fork");
-	pthread_mutex_lock(philo->fork2);
-	printf("%lu %d %s\n", get_time2(philo->main), philo->id, "has taken a fork");
+	if (!philo->main->dead && !philo->main->eat)
+	{
+		pthread_mutex_lock(philo->fork1);
+		if (philo->main->dead || philo->main->eat)
+			return (1);
+		printf("%lu %d %s\n", get_time2(philo->main), philo->id,
+			"has taken a fork");
+		pthread_mutex_lock(philo->fork2);
+		if (philo->main->dead || philo->main->eat)
+			return (1);
+		printf("%lu %d %s\n", get_time2(philo->main), philo->id,
+			"has taken a fork");
+		return (0);
+	}
+	return (1);
 }
 
 void	drop_forks(t_philo *philo)
@@ -30,12 +41,21 @@ void	drop_forks(t_philo *philo)
 
 void	eat(t_philo *philo)
 {
-	take_forks(philo);
-	philo->leat = get_time2(philo->main);
-	printf("%lu %d %s\n", philo->leat, philo->id, "is eating");
+	if (take_forks(philo))
+		return ;
+	philo->eatt = 1;
+	philo->leat = get_time2(philo->main) + philo->tte;
+	printf("%lu %d %s\n", philo->leat - philo->tte, philo->id, "is eating");
 	philo->eat++;
 	ft_usleep(philo->main->tte);
-	drop_forks(philo);
+	philo->eatt = 0;
+	if (!philo->main->dead && !philo->main->eat)
+		drop_forks(philo);
+	else
+	{
+		pthread_mutex_unlock(philo->fork2);
+		pthread_mutex_unlock(philo->fork1);
+	}
 }
 
 void	*routine(void *philo_pointer)
@@ -48,7 +68,9 @@ void	*routine(void *philo_pointer)
 	while (!philo->main->dead && !philo->main->eat)
 	{
 		eat(philo);
-		printf("%lu %d %s\n", get_time2(philo->main), philo->id, "is thinking");
+		if (!philo->main->dead && !philo->main->eat)
+			printf("%lu %d %s\n", get_time2(philo->main), philo->id,
+				"is thinking");
 	}
 	return ((void *)0);
 }
@@ -63,11 +85,12 @@ void	check_death(t_main *main)
 		while (i < main->nb_philo && !main->dead)
 		{
 			if (get_time2(main) - main->philos[i].leat
-				>= (uint64_t)main->philos[i].ttd)
+				>= (uint64_t)main->philos[i].ttd && main->philos[i].eatt == 0)
 			{
+				main->dead = 1;
 				printf("%lu %d %s\n", get_time() - main->time_of_start,
 					i + 1, "died");
-				main->dead = 1;
+				break ;
 			}
 			i++;
 		}
