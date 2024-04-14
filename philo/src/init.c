@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 15:04:24 by rmidou            #+#    #+#             */
-/*   Updated: 2024/04/11 12:02:30 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/04/14 13:45:09 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	init(t_main *main)
 		main->philos[i].tte = main->tte;
 		main->philos[i].tts = main->tts;
 		main->philos[i].id = i + 1;
+		main->philos[i].eat = 0;
 		i++;
 	}
 }
