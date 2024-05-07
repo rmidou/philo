@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 09:15:02 by rmidou            #+#    #+#             */
-/*   Updated: 2024/04/14 14:23:33 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/07 10:36:52 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	check_death(t_main *main)
 		if (main->dead)
 			break ;
 		i = 0;
-		while (main->philos[i].eat > main->nbr_philo_eat)
+		while (main->philos[i].eat >= main->nbr_philo_eat)
 			i++;
 		if (i == main->nb_philo)
 			main->eat = 1;

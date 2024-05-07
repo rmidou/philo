@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 15:35:10 by rmidou            #+#    #+#             */
-/*   Updated: 2024/04/11 12:02:52 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/07 10:34:45 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	main(int ac, char **av)
 		printf("philosophers: wrong arguments: <number_of_philosophers>"
 			" <time_to_die> <time_to_eat> <time_to_sleep>"
 			"[number_of_times_each_philosopher_must_eat]\n");
+		return (0);
 	}
 	ft_bzero(&main, sizeof(t_main));
 	if (ac < 4)
