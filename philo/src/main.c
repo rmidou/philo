@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 15:35:10 by rmidou            #+#    #+#             */
-/*   Updated: 2024/05/07 10:34:45 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/07 17:59:52 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@ void	ft_exit(t_main *main)
 
 	i = -1;
 	while (++i < main->nb_philo)
+	{
 		pthread_mutex_destroy(&main->forks[i]);
+		pthread_mutex_destroy(&main->philos[i].lock);
+	}
+	pthread_mutex_destroy(&main->lock);
 	clear_main(main);
 }
 

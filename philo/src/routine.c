@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 09:15:02 by rmidou            #+#    #+#             */
-/*   Updated: 2024/05/07 10:36:52 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/13 14:14:26 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,30 @@
 
 int	take_forks(t_philo *philo)
 {
-	if (!philo->main->dead && !philo->main->eat)
+	pthread_mutex_lock(philo->fork1);
+	pthread_mutex_lock(&philo->main->lock);
+	if (philo->main->eat)
 	{
-		pthread_mutex_lock(philo->fork1);
-		if (philo->main->dead || philo->main->eat)
-			return (1);
-		printf("%lu %d %s\n", get_time2(philo->main), philo->id,
-			"has taken a fork");
-		pthread_mutex_lock(philo->fork2);
-		if (philo->main->dead || philo->main->eat)
-			return (1);
-		printf("%lu %d %s\n", get_time2(philo->main), philo->id,
-			"has taken a fork");
-		return (0);
+		pthread_mutex_unlock(&philo->main->lock);
+		pthread_mutex_unlock(philo->fork1);
+		return (1);
 	}
-	return (1);
+	pthread_mutex_unlock(&philo->main->lock);
+	printf("%lu %d %s\n", get_time2(philo->main), philo->id,
+		"has taken a fork");
+	pthread_mutex_lock(philo->fork2);
+	pthread_mutex_lock(&philo->main->lock);
+	if (philo->main->eat)
+	{
+		pthread_mutex_unlock(&philo->main->lock);
+		pthread_mutex_unlock(philo->fork1);
+		pthread_mutex_unlock(philo->fork2);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->main->lock);
+	printf("%lu %d %s\n", get_time2(philo->main), philo->id,
+		"has taken a fork");
+	return (0);
 }
 
 void	drop_forks(t_philo *philo)
@@ -39,67 +48,71 @@ void	drop_forks(t_philo *philo)
 	ft_usleep(philo->main->tts);
 }
 
-void	eat(t_philo *philo)
+void	eat2(t_philo *philo)
 {
-	if (take_forks(philo))
-		return ;
-	philo->eatt = 1;
-	philo->leat = get_time2(philo->main);
-	printf("%lu %d %s\n", philo->leat, philo->id, "is eating");
-	philo->eat++;
-	ft_usleep(philo->main->tte);
-	philo->eatt = 0;
+	pthread_mutex_lock(&philo->main->lock);
 	if (!philo->main->dead && !philo->main->eat)
+	{
+		pthread_mutex_unlock(&philo->main->lock);
 		drop_forks(philo);
+	}
 	else
 	{
+		pthread_mutex_unlock(&philo->main->lock);
 		pthread_mutex_unlock(philo->fork2);
 		pthread_mutex_unlock(philo->fork1);
 	}
 }
 
+void	eat(t_philo *philo)
+{
+	int	nb_eat;
+
+	nb_eat = 0;
+	if (take_forks(philo))
+		return ;
+	pthread_mutex_lock(&philo->lock);
+	philo->leat = get_time2(philo->main);
+	printf("%lu %d %s\n", philo->leat, philo->id, "is eating");
+	philo->eat++;
+	if (philo->eat >= philo->nbr_philo_eat)
+		nb_eat = 1;
+	pthread_mutex_unlock(&philo->lock);
+	ft_usleep(philo->tte);
+	if (nb_eat)
+	{
+		pthread_mutex_lock(&philo->main->lock);
+		philo->main->eatt++;
+		pthread_mutex_unlock(&philo->main->lock);
+	}
+	eat2(philo);
+}
+
 void	*routine(void *philo_pointer)
 {
 	t_philo	*philo;
+	int		end;
 
 	philo = (t_philo *)philo_pointer;
 	if (philo->id % 2 == 0)
 		ft_usleep(philo->tte);
-	while (!philo->main->dead && !philo->main->eat)
+	end = 0;
+	while (1)
 	{
 		eat(philo);
+		pthread_mutex_lock(&philo->lock);
+		if (philo->eat >= philo->nbr_philo_eat)
+			end = 1;
+		pthread_mutex_unlock(&philo->lock);
+		pthread_mutex_lock(&philo->main->lock);
 		if (!philo->main->dead && !philo->main->eat)
 			printf("%lu %d %s\n", get_time2(philo->main), philo->id,
 				"is thinking");
+		else
+			end = 1;
+		pthread_mutex_unlock(&philo->main->lock);
+		if (end == 1)
+			break ;
 	}
 	return ((void *)0);
-}
-
-void	check_death(t_main *main)
-{
-	int		i;
-
-	while (!main->eat)
-	{
-		i = 0;
-		while (i < main->nb_philo && !main->dead)
-		{
-			if (get_time2(main) - main->philos[i].leat
-				>= (uint64_t)main->philos[i].ttd && main->philos[i].eatt == 0)
-			{
-				main->dead = 1;
-				printf("%lu %d %s\n", get_time() - main->time_of_start,
-					i + 1, "died");
-				break ;
-			}
-			i++;
-		}
-		if (main->dead)
-			break ;
-		i = 0;
-		while (main->philos[i].eat >= main->nbr_philo_eat)
-			i++;
-		if (i == main->nb_philo)
-			main->eat = 1;
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:03:37 by rmidou            #+#    #+#             */
-/*   Updated: 2024/04/14 13:51:49 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/13 11:13:38 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ typedef struct s_philo
 	uint64_t		leat;
 	int				eat;
 	int				eatt;
+	pthread_mutex_t	lock;
 	pthread_mutex_t	*fork1;
 	pthread_mutex_t	*fork2;
 	pthread_t		thread;
 	struct s_main	*main;
+	int				nbr_philo_eat;
 }	t_philo;
 
 typedef struct s_main
@@ -44,7 +46,9 @@ typedef struct s_main
 	int				tts;
 	int				nbr_philo_eat;
 	int				eat;
+	int				eatt;
 	t_philo			*philos;
+	pthread_mutex_t	lock;
 	pthread_mutex_t	*forks;
 	uint64_t		time_of_start;
 }	t_main;

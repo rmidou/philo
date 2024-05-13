@@ -2,7 +2,7 @@
 
 NAME		=	philo
 
-CC			=	cc -Wall -Wextra -Werror -fsanitize=thread
+CC			=	cc -Wall -Wextra -Werror
 
 INCLUDE		=	-I includes
 
@@ -14,6 +14,7 @@ FILES		=	main			\
 				utils			\
 				routine			\
 				init			\
+				check_death		\
 
 DEF			=	"\033[0m"
 BG_GREEN	=	"\033[48;2;0;200;0m"

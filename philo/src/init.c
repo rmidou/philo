@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 15:04:24 by rmidou            #+#    #+#             */
-/*   Updated: 2024/04/14 13:45:09 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/13 14:12:02 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	args(char **av, t_main *philo)
 	}
 	if (ft_isdigit(av[5]))
 		philo->nbr_philo_eat = ft_atoi(av[5]);
+	philo->eatt = 0;
 	return (1);
 }
 
@@ -58,6 +59,8 @@ void	init(t_main *main)
 		main->philos[i].tts = main->tts;
 		main->philos[i].id = i + 1;
 		main->philos[i].eat = 0;
+		main->philos[i].nbr_philo_eat = main->nbr_philo_eat;
+		pthread_mutex_init(&main->philos[i].lock, NULL);
 		i++;
 	}
 }
@@ -72,6 +75,7 @@ void	create_mutex(t_main *main)
 		pthread_mutex_init(&(main->forks[i]), NULL);
 		i++;
 	}
+	pthread_mutex_init(&(main->lock), NULL);
 }
 
 void	init_philo(t_main *main)
