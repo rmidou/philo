@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 14:14:12 by rmidou            #+#    #+#             */
-/*   Updated: 2024/05/13 14:14:42 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/15 14:23:15 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	check_death3(t_main *main, int i)
 {
+	pthread_mutex_unlock(&main->lock);
+	brindf(main, i + 1, "died");
 	pthread_mutex_lock(&main->lock);
 	main->dead = 1;
-	printf("%lu %d %s\n", get_time() - main->time_of_start,
-		i + 1, "died");
 	pthread_mutex_unlock(&main->lock);
 }
 
@@ -49,14 +49,25 @@ void	check_death(t_main *main)
 			leat = main->philos[i].leat;
 			ttd = main->philos[i].ttd;
 			pthread_mutex_unlock(&main->philos[i].lock);
+			pthread_mutex_lock(&main->lock);
 			if (get_time2(main) - leat >= ttd)
 			{
 				check_death3(main, i);
-				break ;
+				return ;
 			}
+			pthread_mutex_unlock(&main->lock);
 			i++;
 		}
 		if (check_death2(main))
-			break ;
+			return ;
 	}
+}
+
+void	brindf(t_main *main, int i, char *todo)
+{
+	pthread_mutex_lock(&main->lock);
+	if (!main->dead && !main->eat)
+		printf("%lu %d %s\n", get_time2(main), i,
+			todo);
+	pthread_mutex_unlock(&main->lock);
 }

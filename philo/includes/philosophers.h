@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:03:37 by rmidou            #+#    #+#             */
-/*   Updated: 2024/05/13 11:13:38 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/15 14:17:17 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ size_t		ft_atoi(char *str);
 int			ft_usleep(uint64_t time);
 int			ft_isdigit(char *c);
 void		ft_bzero(void *s, size_t n);
+void		brindf(t_main *main, int i, char *todo);
 
 /*		routine.c	*/
 void		*routine(void *philo_pointer);
