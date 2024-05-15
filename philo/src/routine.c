@@ -6,45 +6,11 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 09:15:02 by rmidou            #+#    #+#             */
-/*   Updated: 2024/05/15 14:16:28 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/15 16:07:17 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
-
-int	take_forks(t_philo *philo)
-{
-	pthread_mutex_lock(philo->fork1);
-	pthread_mutex_lock(&philo->main->lock);
-	if (philo->main->eat)
-	{
-		pthread_mutex_unlock(&philo->main->lock);
-		pthread_mutex_unlock(philo->fork1);
-		return (1);
-	}
-	pthread_mutex_unlock(&philo->main->lock);
-	brindf(philo->main, philo->id, "has taken a fork");
-	pthread_mutex_lock(philo->fork2);
-	pthread_mutex_lock(&philo->main->lock);
-	if (philo->main->eat)
-	{
-		pthread_mutex_unlock(&philo->main->lock);
-		pthread_mutex_unlock(philo->fork1);
-		pthread_mutex_unlock(philo->fork2);
-		return (1);
-	}
-	pthread_mutex_unlock(&philo->main->lock);
-	brindf(philo->main, philo->id, "has taken a fork");
-	return (0);
-}
-
-void	drop_forks(t_philo *philo)
-{
-	pthread_mutex_unlock(philo->fork2);
-	pthread_mutex_unlock(philo->fork1);
-	brindf(philo->main, philo->id, "is sleeping");
-	ft_usleep(philo->main->tts);
-}
 
 void	eat2(t_philo *philo)
 {
@@ -67,8 +33,7 @@ void	eat(t_philo *philo)
 	int	nb_eat;
 
 	nb_eat = 0;
-	if (take_forks(philo))
-		return ;
+	forks(philo);
 	pthread_mutex_lock(&philo->main->lock);
 	nb_eat = get_time() - philo->main->time_of_start;
 	pthread_mutex_unlock(&philo->main->lock);

@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 15:03:37 by rmidou            #+#    #+#             */
-/*   Updated: 2024/05/15 14:17:17 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/15 16:09:37 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,9 @@ int			args(char **av, t_main *philo);
 void		init(t_main *main);
 void		init_philo(t_main *main);
 void		init_philo1(int ttd);
+int			take_forks(t_philo *philo);
+int			take_forks(t_philo *philo);
+void		drop_forks(t_philo *philo);
+int			forks(t_philo *philo);
 
 #endif
