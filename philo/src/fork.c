@@ -6,7 +6,7 @@
 /*   By: rmidou <rmidou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 15:18:21 by rmidou            #+#    #+#             */
-/*   Updated: 2024/05/15 16:09:54 by rmidou           ###   ########.fr       */
+/*   Updated: 2024/05/20 17:40:11 by rmidou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ int	take_forks2(t_philo *philo)
 
 void	drop_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->fork2);
 	pthread_mutex_unlock(philo->fork1);
+	pthread_mutex_unlock(philo->fork2);
 	brindf(philo->main, philo->id, "is sleeping");
 	ft_usleep(philo->main->tts);
 }
