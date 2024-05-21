@@ -72,6 +72,7 @@ void	*routine(void *philo_pointer)
 			end = 1;
 		pthread_mutex_unlock(&philo->lock);
 		brindf(philo->main, philo->id, "is thinking");
+		ft_usleep(1);
 	}
 	return ((void *)0);
 }
